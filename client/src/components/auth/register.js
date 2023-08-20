@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import TextFieldGroup from "../common /textFieldGroup";
+import TextFieldGroup from "../common/textFieldGroup";
 class Register extends Component {
   constructor() {
     super();
@@ -53,7 +53,6 @@ class Register extends Component {
                 <TextFieldGroup
                   placeholder="Name"
                   name="name"
-                  type="text"
                   value={this.state.name}
                   onChange={this.onChange}
                   error={errors.name}

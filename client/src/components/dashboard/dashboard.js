@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { getCurrentProfile } from "../../actions/profileActions";
-import Spinner from "../common /Spinner";
+import Spinner from "../common/Spinner";
 import { Link } from "react-router-dom";
 
 function Dashboard() {

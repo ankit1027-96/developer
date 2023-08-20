@@ -12,6 +12,8 @@ import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import Dashboard from "./components/dashboard/dashboard";
 import { clearCurrentProfile } from "./actions/profileActions";
+import PrivateRoute from "./components/common/privateRoute";
+import CreateProfile from "./components/createProfile/CreateProfile";
 
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -37,19 +39,14 @@ function Routees() {
   return (
     <Provider store={store}>
       <Navbar />
+      <Route exact path="/" component={App} />
+      <Route exact path="/register" component={Register} />
+      <Route exact path="/login" component={Login} />
       <Switch>
-        <Route exact path="/">
-          <App />
-        </Route>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/dashboard">
-          <Dashboard />
-        </Route>
+        <PrivateRoute exact path="/dashboard" component={Dashboard} />
+      </Switch>
+      <Switch>
+        <PrivateRoute exact path="/create-profile" component={CreateProfile} />
       </Switch>
       <Footer />
     </Provider>
