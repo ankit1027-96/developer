@@ -1,18 +1,25 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import { getCurrentProfile } from "../../actions/profileActions";
+import { getCurrentProfile, deleteAccount } from "../../actions/profileActions";
 import Spinner from "../common/Spinner";
 import { Link } from "react-router-dom";
+import ProfileActions from "./ProfileActions";
+import Experience from "./experience";
 
 function Dashboard() {
+  // Store Access
   const profile = useSelector((state) => state.rootReducer.profile);
   const auth = useSelector((state) => state.rootReducer.auth);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getCurrentProfile());
   }, []);
+
+  const onDeleteClick = () => {
+    dispatch(deleteAccount());
+  };
 
   let dashboardContent;
 
@@ -20,7 +27,21 @@ function Dashboard() {
     dashboardContent = <Spinner />;
   } else {
     if (Object.keys(profile.profile).length > 0) {
-      dashboardContent = <h4>TODO: Display Profile</h4>;
+      dashboardContent = (
+        <div>
+          <p className="lead text-muted">
+            Welcome{" "}
+            <Link to={`/profile/${profile.handle}`}>{auth.user.name}</Link>
+          </p>
+
+          <ProfileActions />
+          <Experience />
+          <div style={{ margin: "60px" }} />
+          <button onClick={onDeleteClick} className="btn btn-danger">
+            Delete My Account
+          </button>
+        </div>
+      );
     } else {
       dashboardContent = (
         <div>
@@ -36,7 +57,6 @@ function Dashboard() {
       );
     }
   }
-
   return (
     <div className="dashboard">
       <div className="container">
@@ -49,11 +69,5 @@ function Dashboard() {
     </div>
   );
 }
-
-Dashboard.propTypes = {
-  getCurrentProfile: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
-};
 
 export default Dashboard;

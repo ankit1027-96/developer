@@ -6,12 +6,14 @@ import TextFieldGroup from "../common/textFieldGroup";
 import SelectListGroup from "../common/selectListGroup";
 import TextAreaFieldGroup from "../common/textAreaFieldGroup";
 import InputGroup from "../common/inputGroup";
-import { createProfile } from "../../actions/profileActions";
+import { createProfile, getCurrentProfile } from "../../actions/profileActions";
+import isEmpty from "../../validation/is-empty";
 
-const CreateProfile = (props) => {
+const EditProfile = (props) => {
   // Store Access
-  const profile = useSelector((state) => state.rootReducer.profile);
-  const authErr = useSelector((state) => state.rootReducer.error);
+  const profile = useSelector((state) => state.rootReducer.profile.profile);
+  //   const authErr = useSelector((state) => state.rootReducer.error);
+  const rootRed = useSelector((state) => state.rootReducer);
 
   const [bio, setBio] = useState({
     displaySocialInputs: false,
@@ -31,15 +33,79 @@ const CreateProfile = (props) => {
   });
   const [errors, setErrors] = useState({ errors: {} });
 
-  useEffect(() => {
-    if (authErr.user !== undefined) {
-      setErrors(authErr.user);
-    }
-  }, [authErr]);
-
+  // Dispatch Action
   const dispatch = useDispatch();
+  // History Object
   let history = useHistory();
 
+  useEffect(() => {
+    dispatch(getCurrentProfile());
+  }, []);
+
+  useEffect(() => {
+    if (rootRed.error.user !== undefined) {
+      setErrors(rootRed.error.user);
+    }
+
+    if (profile) {
+      let uprofile = { ...profile };
+      console.log(uprofile);
+      // console.log(profile);
+
+      // skills array to str
+      let skillsCSV;
+
+      if (uprofile.skills !== undefined) {
+        skillsCSV = uprofile.skills.join(",");
+      }
+
+      //
+        uprofile.company = uprofile.company ? uprofile.company : "";
+      //
+      uprofile.website = uprofile.website ? uprofile.website : "";
+      uprofile.location = uprofile.location ? uprofile.location : "";
+      uprofile.githubusername =
+        uprofile.githubusername ? uprofile.githubusername : ""
+      ;
+      uprofile.bio = uprofile.bio ? uprofile.bio : "";
+      uprofile.social = uprofile.social ? uprofile.social : {};
+
+      if (uprofile.social !== false) {
+        uprofile.twitter = 
+          uprofile.social.twitter ? uprofile.social.twitter : ""
+        ;
+        uprofile.facebook = 
+          uprofile.social.facebook ? uprofile.social.facebook : ""
+        ;
+        uprofile.linkedin = 
+          uprofile.social.linkedin ? uprofile.social.linkedin : ""
+        ;
+        uprofile.youtube = 
+          uprofile.social.youtube ? uprofile.social.youtube : ""
+        ;
+        uprofile.instagram = 
+          uprofile.social.instagram ? uprofile.social.instagram : ""
+        ;
+      }
+
+      setBio({
+        handle: uprofile.handle,
+        company: uprofile.company,
+        website: uprofile.website,
+        location: uprofile.location,
+        status: uprofile.status,
+        skills: skillsCSV,
+        githubusername: uprofile.githubusername,
+        bio: uprofile.bio,
+        twitter: uprofile.twitter,
+        facebook: uprofile.facebook,
+        instagram: uprofile.instagram,
+        linkedin: uprofile.linkedin,
+      });
+    }
+  }, [rootRed, profile]);
+  useEffect(() => {});
+  // console.log(bio);
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -136,11 +202,8 @@ const CreateProfile = (props) => {
       <div className="container">
         <div className="row">
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">Create Your Profile</h1>
-            <p className="lead text-center">
-              Let's get some information to make your profile stand out
-            </p>
-            <small className="d-block pb-3">* = required fields</small>
+            <h1 className="display-4 text-center">Edit Your Profile</h1>
+
             <form onSubmit={onSubmit}>
               <TextFieldGroup
                 placeholder="* Profile Handle"
@@ -237,9 +300,4 @@ const CreateProfile = (props) => {
   );
 };
 
-CreateProfile.propTypes = {
-  profile: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
-};
-
-export default CreateProfile;
+export default EditProfile;

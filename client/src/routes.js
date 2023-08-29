@@ -14,6 +14,9 @@ import Dashboard from "./components/dashboard/dashboard";
 import { clearCurrentProfile } from "./actions/profileActions";
 import PrivateRoute from "./components/common/privateRoute";
 import CreateProfile from "./components/createProfile/CreateProfile";
+import EditProfile from "./components/edit-profile/EditProfile";
+import AddExperience from "./components/addCredentials/addExperience";
+import AddEducation from "./components/addCredentials/addEducation";
 
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -35,22 +38,31 @@ if (localStorage.jwtToken) {
   }
 }
 
-function Routees() {
+const Routees = () => {
   return (
     <Provider store={store}>
       <Navbar />
       <Route exact path="/" component={App} />
-      <Route exact path="/register" component={Register} />
-      <Route exact path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+      <Route path="/login" component={Login} />
       <Switch>
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
       </Switch>
       <Switch>
         <PrivateRoute exact path="/create-profile" component={CreateProfile} />
       </Switch>
+      <Switch>
+        <PrivateRoute exact path="/edit-profile" component={EditProfile} />
+      </Switch>
+      <Switch>
+        <PrivateRoute exact path="/add-experience" component={AddExperience} />
+      </Switch>
+      <Switch>
+        <PrivateRoute exact path="/add-education" component={AddEducation} />
+      </Switch>
       <Footer />
     </Provider>
   );
-}
+};
 
 export default Routees;
